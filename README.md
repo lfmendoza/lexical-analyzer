@@ -67,14 +67,17 @@ python examples/example.py
 ### Desde la línea de comandos
 
 ```bash
-# Procesar una expresión regular
-lexical-analyzer --regex "(a|b)*abb" --word "aabb" --outdir resultados
+# RECOMENDADO: Procesar múltiples expresiones desde un archivo
+lexical-analyzer --input examples/expressions.txt --word 'aabb' --outdir resultados
 
-# Procesar múltiples expresiones desde un archivo
-lexical-analyzer --input examples/expressions.txt --word "test" --outdir resultados
+# Procesar una expresión simple (sin paréntesis)
+lexical-analyzer --regex 'a*b*' --word 'aabb' --outdir resultados
 
 # Usar símbolo epsilon en ASCII (útil para algunos terminales)
-lexical-analyzer --regex "a*" --word "aaa" --ascii-eps --outdir resultados
+lexical-analyzer --regex 'a*' --word 'aaa' --ascii-eps --outdir resultados
+
+# NOTA: En Windows con Git Bash, las expresiones con paréntesis pueden causar problemas.
+# Para expresiones complejas como "(a|b)*abb", usar el archivo de entrada es más confiable.
 ```
 
 ### Desde Python
@@ -197,6 +200,49 @@ Convierte un AFN a un AFD usando el algoritmo de construcción por subconjuntos,
 
 ### Minimización de Hopcroft
 Minimiza un AFD usando el algoritmo de Hopcroft, particionando estados en clases de equivalencia para reducir el número de estados necesarios.
+
+## Solución de Problemas
+
+### Problemas Comunes
+
+#### Error: "ModuleNotFoundError: No module named 'lexical_analyzer'"
+```bash
+# Solución: Instalar el paquete en modo desarrollo
+pip install -e .
+```
+
+#### Error: "lexical-analyzer: command not found"
+```bash
+# Solución: Verificar que Poetry esté instalado y el paquete esté instalado
+poetry install
+# O alternativamente:
+pip install -e .
+```
+
+#### Error: "'b)*abb' is not recognized as an internal or external command"
+Este es un problema específico de Windows con Git Bash al procesar paréntesis:
+```bash
+# ❌ Problema en Windows
+lexical-analyzer --regex "(a|b)*abb" --word "aabb" --outdir resultados
+
+# ✅ Soluciones:
+# 1. Usar archivo de entrada (RECOMENDADO)
+lexical-analyzer --input examples/expressions.txt --word "aabb" --outdir resultados
+
+# 2. Usar expresiones simples sin paréntesis
+lexical-analyzer --regex "a*b*" --word "aabb" --outdir resultados
+
+# 3. Usar PowerShell en lugar de Git Bash
+# En PowerShell:
+lexical-analyzer --regex "(a|b)*abb" --word "aabb" --outdir resultados
+```
+
+#### Problemas de encoding con caracteres Unicode
+Si encuentras errores de encoding con símbolos como ε o emojis:
+```bash
+# Usar símbolo ASCII para epsilon
+lexical-analyzer --regex "a*" --word "aaa" --ascii-eps --outdir resultados
+```
 
 ## Casos de Prueba
 
