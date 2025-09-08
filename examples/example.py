@@ -34,7 +34,7 @@ def main():
     ]
     
     for i, (regex, test_word) in enumerate(examples, 1):
-        print(f"\n📝 Example {i}:")
+        print(f"\nExample {i}:")
         print(f"   Regex: {regex}")
         print(f"   Test word: '{test_word}'")
         
@@ -48,19 +48,19 @@ def main():
             )
             
             # Display results
-            print(f"   ✅ Processing completed!")
-            print(f"   📊 Postfix: {result.postfix}")
-            print(f"   🔢 States: NFA={result.nfa_states}, DFA={result.dfa_states}, Min={result.dfa_min_states}")
-            print(f"   ✅ Accepts '{test_word}': NFA={'Yes' if result.nfa_accepts else 'No'}, "
+            print(f"   OK Processing completed!")
+            print(f"   Postfix: {result.postfix}")
+            print(f"   States: NFA={result.nfa_states}, DFA={result.dfa_states}, Min={result.dfa_min_states}")
+            print(f"   OK Accepts '{test_word}': NFA={'Yes' if result.nfa_accepts else 'No'}, "
                   f"DFA={'Yes' if result.dfa_accepts else 'No'}, "
                   f"Min={'Yes' if result.dfa_min_accepts else 'No'}")
-            print(f"   📁 Files generated in: ./example_output_{i}/")
+            print(f"   Files generated in: ./example_output_{i}/")
             
         except Exception as e:
-            print(f"   ❌ Error: {e}")
+            print(f"   X Error: {e}")
     
-    print(f"\n🎉 Example completed!")
-    print(f"💡 Try running: lexical-analyzer --help")
+    print(f"\nExample completed!")
+    print(f"Try running: lexical-analyzer --help")
 
 
 if __name__ == "__main__":

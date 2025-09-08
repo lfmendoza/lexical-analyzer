@@ -12,7 +12,7 @@ import os
 
 def install_package():
     """Install the package in development mode."""
-    print("🔧 Installing Lexical Analyzer in development mode...")
+    print("Installing Lexical Analyzer in development mode...")
     
     try:
         # Change to the project root directory
@@ -24,17 +24,17 @@ def install_package():
             sys.executable, "-m", "pip", "install", "-e", "."
         ], check=True, capture_output=True, text=True)
         
-        print("✅ Package installed successfully!")
-        print("📦 You can now run:")
+        print("OK Package installed successfully!")
+        print("You can now run:")
         print("   - python examples/example.py")
         print("   - lexical-analyzer --help")
         
     except subprocess.CalledProcessError as e:
-        print(f"❌ Installation failed: {e}")
+        print(f"X Installation failed: {e}")
         print(f"Error output: {e.stderr}")
         return False
     except Exception as e:
-        print(f"❌ Unexpected error: {e}")
+        print(f"X Unexpected error: {e}")
         return False
     
     return True
@@ -42,24 +42,24 @@ def install_package():
 
 def test_import():
     """Test if the package can be imported."""
-    print("🧪 Testing package import...")
+    print("Testing package import...")
     
     try:
         import lexical_analyzer
-        print("✅ Package imported successfully!")
+        print("OK Package imported successfully!")
         return True
     except ImportError as e:
-        print(f"❌ Import failed: {e}")
+        print(f"X Import failed: {e}")
         return False
 
 
 if __name__ == "__main__":
-    print("🚀 Lexical Analyzer Installation Script")
+    print("Lexical Analyzer Installation Script")
     print("=" * 50)
     
     if install_package():
         test_import()
     
-    print("\n💡 Next steps:")
+    print("\nNext steps:")
     print("1. Run: python examples/example.py")
     print("2. Or use CLI: lexical-analyzer --help")

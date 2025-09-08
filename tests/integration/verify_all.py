@@ -21,10 +21,10 @@ def test_import():
     print("1. Testing package import...")
     try:
         import lexical_analyzer
-        print("   ✅ Package imported successfully!")
+        print("   OK Package imported successfully!")
         return True
     except ImportError as e:
-        print(f"   ❌ Import failed: {e}")
+        print(f"   X Import failed: {e}")
         return False
 
 
@@ -45,10 +45,10 @@ def test_basic_functionality():
         if os.path.exists("./temp_test"):
             shutil.rmtree("./temp_test")
         
-        print("   ✅ Basic functionality works!")
+        print("   OK Basic functionality works!")
         return True
     except Exception as e:
-        print(f"   ❌ Basic functionality failed: {e}")
+        print(f"   X Basic functionality failed: {e}")
         return False
 
 
@@ -62,13 +62,13 @@ def test_cli_help():
         ], capture_output=True, text=True, timeout=10)
         
         if result.returncode == 0 and "Lexical Analyzer" in result.stdout:
-            print("   ✅ CLI help command works!")
+            print("   OK CLI help command works!")
             return True
         else:
-            print(f"   ❌ CLI help failed: {result.stderr}")
+            print(f"   X CLI help failed: {result.stderr}")
             return False
     except Exception as e:
-        print(f"   ❌ CLI test failed: {e}")
+        print(f"   X CLI test failed: {e}")
         return False
 
 
@@ -81,13 +81,13 @@ def test_example_script():
         ], capture_output=True, text=True, timeout=30)
         
         if result.returncode == 0:
-            print("   ✅ Example script works!")
+            print("   OK Example script works!")
             return True
         else:
-            print(f"   ❌ Example script failed: {result.stderr}")
+            print(f"   X Example script failed: {result.stderr}")
             return False
     except Exception as e:
-        print(f"   ❌ Example script test failed: {e}")
+        print(f"   X Example script test failed: {e}")
         return False
 
 
