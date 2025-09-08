@@ -134,7 +134,7 @@ a?
                 result = analyzer.process_regex(
                     regex_raw=regex,
                     test_word=test_word,
-                    output_dir=os.path.join(temp_dir, f"test_{regex.replace('|', '_').replace('*', 'star').replace('(', '').replace(')', '')}")
+                    output_dir=os.path.join(temp_dir, f"test_{regex.replace('|', '_').replace('*', 'star').replace('(', '').replace(')', '').replace('?', 'q')}")
                 )
                 
                 # Basic verification
