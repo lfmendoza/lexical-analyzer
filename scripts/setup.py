@@ -102,10 +102,10 @@ def run_linting() -> bool:
     print("🔍 Running code quality checks...")
     
     commands = [
-        ("poetry run black --check src/ tests/", "Checking code formatting"),
-        ("poetry run isort --check-only src/ tests/", "Checking import sorting"),
-        ("poetry run flake8 src/ tests/", "Running linting"),
-        ("poetry run mypy src/", "Running type checking"),
+        ("poetry run black --check . tests/", "Checking code formatting"),
+        ("poetry run isort --check-only . tests/", "Checking import sorting"),
+        ("poetry run flake8 . tests/", "Running linting"),
+        ("poetry run mypy .", "Running type checking"),
     ]
     
     for command, description in commands:

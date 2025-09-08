@@ -1,308 +1,198 @@
-# Lexical Analyzer
+# Analizador Léxico - Procesamiento de Expresiones Regulares
 
-A professional implementation of regular expression processing algorithms for lexical analysis, following industry standards and best practices.
+Este proyecto implementa los algoritmos fundamentales para el procesamiento de expresiones regulares, desarrollado como parte del curso de Teoría de la Computación. El objetivo es construir autómatas finitos a partir de expresiones regulares y verificar si cadenas pertenecen al lenguaje que estas definen.
 
-## Features
+## ¿Qué hace este proyecto?
 
-- **Shunting Yard Algorithm**: Robust infix to postfix conversion
-- **Thompson's Construction**: Efficient NFA generation from regular expressions
-- **Subset Construction**: NFA to DFA conversion with epsilon-closure
-- **Hopcroft's Algorithm**: DFA minimization with state partitioning
-- **Professional Visualization**: High-quality SVG generation
-- **Comprehensive Testing**: Unit and integration tests
-- **Industry Standards**: Type hints, logging, error handling, and documentation
+El analizador toma una expresión regular (como `(a|b)*abb`) y una cadena de prueba (como `"aabb"`), y te dice si la cadena pertenece al lenguaje definido por la expresión regular. Para hacer esto, implementa varios algoritmos clásicos:
 
-## Installation
+- **Shunting Yard**: Convierte expresiones de notación infija a postfija
+- **Construcción de Thompson**: Genera un AFN (Autómata Finito No-determinista) 
+- **Construcción por Subconjuntos**: Convierte el AFN a un AFD (Autómata Finito Determinista)
+- **Algoritmo de Hopcroft**: Minimiza el AFD para reducir el número de estados
 
-### Using Poetry (Recommended)
+Además, genera visualizaciones en SVG de todos los autómatas para que puedas ver cómo funcionan.
+
+## Instalación
+
+### Opción 1: Con Poetry (Recomendado)
+
+Si tienes Poetry instalado:
 
 ```bash
-# Install Poetry if not already installed
-curl -sSL https://install.python-poetry.org | python3 -
-
-# Clone the repository
-git clone <repository-url>
-cd lexical-analyzer
-
-# Install dependencies
+# Instalar dependencias
 poetry install
 
-# Activate virtual environment
+# Activar el entorno virtual
 poetry shell
 ```
 
-### Using pip
+### Opción 2: Con pip
 
 ```bash
-# Create virtual environment
+# Crear entorno virtual
 python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+source venv/bin/activate  # En Windows: venv\Scripts\activate
 
-# Install package
+# Instalar el paquete
 pip install -e .
 ```
 
-## Usage
+## Uso
 
-### Command Line Interface
+### Desde la línea de comandos
 
 ```bash
-# Process single regular expression
-lexical-analyzer --regex "(a|b)*abb" --word "aabb" --outdir results
+# Procesar una expresión regular
+lexical-analyzer --regex "(a|b)*abb" --word "aabb" --outdir resultados
 
-# Process multiple expressions from file
-lexical-analyzer --input expressions.txt --word "test" --outdir results
+# Procesar múltiples expresiones desde un archivo
+lexical-analyzer --input examples/expressions.txt --word "test" --outdir resultados
 
-# Use ASCII epsilon symbol
-lexical-analyzer --regex "a*" --word "aaa" --ascii-eps --outdir results
-
-# Verbose output
-lexical-analyzer --regex "a*b*" --word "ab" --verbose --outdir results
+# Usar símbolo epsilon en ASCII (útil para algunos terminales)
+lexical-analyzer --regex "a*" --word "aaa" --ascii-eps --outdir resultados
 ```
 
-### Programmatic Usage
+### Desde Python
 
 ```python
 from lexical_analyzer import LexicalAnalyzer
 
-# Initialize analyzer
-analyzer = LexicalAnalyzer(eps_symbol="ε")
+# Crear el analizador
+analyzer = LexicalAnalyzer()
 
-# Process single regex
-result = analyzer.process_regex(
+# Procesar una expresión
+resultado = analyzer.process_regex(
     regex_raw="(a|b)*abb",
-    test_word="aabb",
-    output_dir="./results"
+    test_word="aabb", 
+    output_dir="./resultados"
 )
 
-print(f"Postfix: {result.postfix}")
-print(f"NFA accepts: {result.nfa_accepts}")
-print(f"DFA accepts: {result.dfa_accepts}")
-print(f"Minimized DFA accepts: {result.dfa_min_accepts}")
-
-# Process multiple regexes from file
-results = analyzer.process_file(
-    input_file="expressions.txt",
-    test_word="test",
-    output_base_dir="./results"
-)
+print(f"¿Acepta 'aabb'? {resultado.nfa_accepts}")
+print(f"Estados: NFA={resultado.nfa_states}, DFA={resultado.dfa_states}")
 ```
 
-## Project Structure
+## Estructura del Proyecto
 
 ```
 lexical-analyzer/
-├── src/
-│   └── lexical_analyzer/
-│       ├── algorithms/          # Core algorithms
-│       │   ├── __init__.py
-│       │   ├── thompson.py      # Thompson's construction
-│       │   ├── subset_construction.py  # NFA to DFA
-│       │   └── hopcroft.py      # DFA minimization
-│       ├── core/                # Core data structures
-│       │   └── __init__.py
-│       ├── visualization/       # SVG generation
-│       │   └── __init__.py
-│       ├── __init__.py
-│       └── cli.py              # Command line interface
-├── tests/                      # Test suite
-│   ├── unit/                   # Unit tests
-│   └── integration/            # Integration tests
-├── docs/                       # Documentation
-├── examples/                   # Usage examples
-├── scripts/                    # Utility scripts
-├── config/                     # Configuration files
-├── pyproject.toml             # Project configuration
-├── .pre-commit-config.yaml    # Pre-commit hooks
-└── README.md                  # This file
+├── algorithms/              # Implementación de los algoritmos
+│   ├── thompson.py         # Construcción de Thompson
+│   ├── subset_construction.py  # Construcción por subconjuntos  
+│   └── hopcroft.py         # Minimización de Hopcroft
+├── core/                   # Estructuras de datos básicas
+├── visualization/          # Generación de gráficos SVG
+├── examples/               # Ejemplos de uso
+├── tests/                  # Pruebas unitarias e integración
+├── cli.py                  # Interfaz de línea de comandos
+└── __init__.py             # Módulo principal
 ```
 
-## Development
+## Ejemplos Incluidos
 
-### Setup Development Environment
+En la carpeta `examples/` encontrarás:
+
+- `example.py`: Script que muestra cómo usar el analizador programáticamente
+- `expressions.txt`: Archivo con expresiones regulares de ejemplo para probar
+
+Para ejecutar el ejemplo:
 
 ```bash
-# Install development dependencies
+python examples/example.py
+```
+
+## Desarrollo
+
+### Configurar el entorno de desarrollo
+
+```bash
+# Instalar dependencias de desarrollo
 poetry install --with dev
 
-# Install pre-commit hooks
-pre-commit install
-
-# Run tests
-pytest
-
-# Run linting
-black src/ tests/
-isort src/ tests/
-flake8 src/ tests/
-mypy src/
+# Instalar hooks de pre-commit
+poetry run pre-commit install
 ```
 
-### Running Tests
+### Ejecutar pruebas
 
 ```bash
-# Run all tests
-pytest
+# Todas las pruebas
+poetry run pytest
 
-# Run with coverage
-pytest --cov=src/lexical_analyzer --cov-report=html
+# Solo pruebas unitarias
+poetry run pytest tests/unit/
 
-# Run specific test categories
-pytest -m unit
-pytest -m integration
+# Con cobertura
+poetry run pytest --cov=lexical_analyzer --cov-report=html
 ```
 
-### Code Quality
+### Formatear código
 
-The project follows strict code quality standards:
+```bash
+# Formatear con Black
+poetry run black .
 
-- **Black**: Code formatting
-- **isort**: Import sorting
-- **flake8**: Linting
-- **mypy**: Type checking
-- **pytest**: Testing framework
-- **pre-commit**: Git hooks
+# Ordenar imports
+poetry run isort .
 
-## API Reference
-
-### Core Classes
-
-#### `LexicalAnalyzer`
-
-Main class for processing regular expressions.
-
-```python
-class LexicalAnalyzer:
-    def __init__(self, eps_symbol: str = "ε"):
-        """Initialize the lexical analyzer."""
-    
-    def process_regex(self, regex_raw: str, test_word: str, 
-                     output_dir: str, ascii_eps: bool = False) -> ProcessingResult:
-        """Process a single regular expression."""
-    
-    def process_file(self, input_file: str, test_word: str,
-                    output_base_dir: str, ascii_eps: bool = False) -> List[ProcessingResult]:
-        """Process multiple regular expressions from a file."""
+# Verificar estilo
+poetry run flake8 .
 ```
 
-#### `ProcessingResult`
+## Archivos de Salida
 
-Result of regular expression processing.
+Para cada expresión regular procesada, el analizador genera:
 
-```python
-@dataclass
-class ProcessingResult:
-    postfix: str
-    nfa_svg_path: str
-    dfa_svg_path: str
-    dfa_min_svg_path: str
-    regex_info_path: str
-    nfa_accepts: bool
-    dfa_accepts: bool
-    dfa_min_accepts: bool
-    nfa_states: int
-    dfa_states: int
-    dfa_min_states: int
-    minimization_log: List[str]
-```
+- **`nfa.svg`**: Visualización del AFN generado
+- **`dfa.svg`**: Visualización del AFD por construcción de subconjuntos
+- **`dfa_min.svg`**: Visualización del AFD minimizado
+- **`regex.txt`**: Reporte detallado del procesamiento
 
-### Algorithms
+## Algoritmos Implementados
 
-#### Thompson's Construction
+### Shunting Yard
+Convierte expresiones regulares de notación infija a postfija, manejando correctamente la precedencia de operadores y paréntesis.
 
-```python
-class ThompsonNFA:
-    def symbol(self, char: str) -> Fragment:
-        """Build NFA fragment for a single symbol."""
-    
-    def concat(self, frag1: Fragment, frag2: Fragment) -> Fragment:
-        """Concatenate two NFA fragments."""
-    
-    def union(self, frag1: Fragment, frag2: Fragment) -> Fragment:
-        """Create union of two NFA fragments."""
-    
-    def star(self, frag: Fragment) -> Fragment:
-        """Apply Kleene star to an NFA fragment."""
-    
-    def from_postfix(self, postfix_regex: str) -> Fragment:
-        """Build NFA from postfix regular expression."""
-```
+### Construcción de Thompson
+Genera un AFN a partir de una expresión regular en notación postfija. Cada símbolo, operador de unión, concatenación y estrella de Kleene se traduce a fragmentos de AFN que se combinan apropiadamente.
 
-#### Subset Construction
+### Construcción por Subconjuntos
+Convierte un AFN a un AFD usando el algoritmo de construcción por subconjuntos, calculando cierres epsilon y transiciones deterministas.
 
-```python
-def nfa_to_dfa(nfa: NFASimulator) -> DFA:
-    """Convert NFA to DFA using subset construction algorithm."""
+### Minimización de Hopcroft
+Minimiza un AFD usando el algoritmo de Hopcroft, particionando estados en clases de equivalencia para reducir el número de estados necesarios.
 
-class NFASimulator:
-    def epsilon_closure(self, states: Set[int]) -> Set[int]:
-        """Calculate epsilon-closure of a set of states."""
-    
-    def move(self, states: Set[int], symbol: str) -> Set[int]:
-        """Calculate states reachable with a symbol."""
-    
-    def simulate(self, input_string: str) -> bool:
-        """Simulate the NFA with an input string."""
-```
+## Casos de Prueba
 
-#### Hopcroft's Minimization
+El proyecto incluye varios casos de prueba que cubren:
 
-```python
-def hopcroft_minimize(dfa: DFA) -> Tuple[DFA, List[str]]:
-    """Minimize a DFA using Hopcroft's algorithm."""
-```
+- Expresiones básicas (`a`, `ab`, `a|b`)
+- Operadores unarios (`a*`, `a+`, `a?`)
+- Expresiones complejas (`(a|b)*abb(a|b)*`)
+- Casos con epsilon
+- Validación de entrada
 
-## Output Files
+## Requisitos
 
-For each processed regular expression, the following files are generated:
+- Python 3.8 o superior
+- Poetry (para gestión de dependencias)
 
-- **`nfa.svg`**: NFA visualization
-- **`dfa.svg`**: DFA visualization  
-- **`dfa_min.svg`**: Minimized DFA visualization
-- **`regex.txt`**: Detailed processing information
+## Contribuir
 
-## Error Handling
+Si quieres contribuir al proyecto:
 
-The system provides comprehensive error handling with custom exceptions:
+1. Haz un fork del repositorio
+2. Crea una rama para tu feature (`git checkout -b feature/nueva-funcionalidad`)
+3. Haz commit de tus cambios (`git commit -am 'Agregar nueva funcionalidad'`)
+4. Push a la rama (`git push origin feature/nueva-funcionalidad`)
+5. Crea un Pull Request
 
-```python
-class RegexError(Exception):
-    """Custom exception for regular expression processing errors."""
-```
+## Licencia
 
-Common error scenarios:
-- Invalid regular expression syntax
-- Unbalanced parentheses or brackets
-- Insufficient operands for operators
-- File I/O errors
-- Invalid automaton states
+Este proyecto está bajo la Licencia MIT. Ver el archivo LICENSE para más detalles.
 
-## Performance
+## Referencias
 
-The implementation is optimized for performance:
-
-- **Caching**: Epsilon-closure and alphabet calculations are cached
-- **Efficient Data Structures**: Uses appropriate data structures for each algorithm
-- **Memory Management**: Proper cleanup and resource management
-- **Algorithmic Complexity**: Follows optimal complexity bounds
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests for new functionality
-5. Ensure all tests pass
-6. Run code quality checks
-7. Submit a pull request
-
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
-
-## Acknowledgments
-
-- Thompson's construction algorithm
-- Hopcroft's minimization algorithm
-- Shunting Yard algorithm
-- Subset construction algorithm
+- Thompson, K. (1968). "Programming techniques: Regular expression search algorithm"
+- Hopcroft, J. E. (1971). "An n log n algorithm for minimizing states in a finite automaton"
+- Aho, A. V., Sethi, R., & Ullman, J. D. (1986). "Compilers: Principles, Techniques, and Tools"

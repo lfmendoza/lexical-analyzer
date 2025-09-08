@@ -4,7 +4,7 @@ version = "1.0.0"
 description = "Professional implementation of regular expression processing algorithms for lexical analysis"
 authors = ["Luis Fernando Mendoza <lfmendoza@example.com>"]
 readme = "README.md"
-packages = [{include = "lexical_analyzer", from = "src"}]
+packages = [{include = "lexical_analyzer"}]
 
 [tool.poetry.dependencies]
 python = "^3.8"
@@ -71,7 +71,7 @@ python_functions = ["test_*"]
 addopts = [
     "--strict-markers",
     "--strict-config",
-    "--cov=src/lexical_analyzer",
+    "--cov=lexical_analyzer",
     "--cov-report=term-missing",
     "--cov-report=html",
     "--cov-report=xml"

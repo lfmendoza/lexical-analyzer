@@ -47,16 +47,16 @@ jobs:
     
     - name: Run linting
       run: |
-        poetry run flake8 src/ tests/
-        poetry run mypy src/
+        poetry run flake8 . tests/
+        poetry run mypy .
     
     - name: Run formatting check
       run: |
-        poetry run black --check src/ tests/
-        poetry run isort --check-only src/ tests/
+        poetry run black --check . tests/
+        poetry run isort --check-only . tests/
     
     - name: Run tests
-      run: poetry run pytest --cov=src/lexical_analyzer --cov-report=xml
+      run: poetry run pytest --cov=lexical_analyzer --cov-report=xml
     
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v3

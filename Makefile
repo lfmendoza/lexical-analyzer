@@ -20,19 +20,19 @@ test: ## Run tests
 	poetry run pytest
 
 test-cov: ## Run tests with coverage
-	poetry run pytest --cov=src/lexical_analyzer --cov-report=html --cov-report=term
+	poetry run pytest --cov=lexical_analyzer --cov-report=html --cov-report=term
 
 lint: ## Run linting
-	poetry run flake8 src/ tests/
-	poetry run mypy src/
+	poetry run flake8 . tests/
+	poetry run mypy .
 
 format: ## Format code
-	poetry run black src/ tests/
-	poetry run isort src/ tests/
+	poetry run black . tests/
+	poetry run isort . tests/
 
 format-check: ## Check code formatting
-	poetry run black --check src/ tests/
-	poetry run isort --check-only src/ tests/
+	poetry run black --check . tests/
+	poetry run isort --check-only . tests/
 
 pre-commit: ## Run pre-commit hooks
 	poetry run pre-commit run --all-files
