@@ -33,11 +33,11 @@ def parse_arguments() -> argparse.Namespace:
 Lexical Analyzer - Professional Regular Expression Processing
 
 Implements industry-standard algorithms for regular expression processing:
-• Shunting Yard algorithm for infix -> postfix conversion
-• Thompson's construction for NFA generation
-• Subset construction for NFA -> DFA conversion
-• Hopcroft's algorithm for DFA minimization
-• Comprehensive simulation and SVG visualization
+- Shunting Yard algorithm for infix -> postfix conversion
+- Thompson's construction for NFA generation
+- Subset construction for NFA -> DFA conversion
+- Hopcroft's algorithm for DFA minimization
+- Comprehensive simulation and SVG visualization
 
 This tool processes regular expressions through the complete pipeline and
 generates professional visualizations suitable for academic and industrial use.
@@ -86,12 +86,12 @@ Examples:
     parser.add_argument(
         "--ascii-eps", 
         action="store_true",
-        help="Use 'eps' instead of 'ε' in SVG visualizations"
+        help="Use 'eps' instead of epsilon symbol in SVG visualizations"
     )
     parser.add_argument(
         "--eps", 
-        default="ε",
-        help="Symbol to use for epsilon (default: ε)"
+        default="eps",
+        help="Symbol to use for epsilon (default: eps)"
     )
     parser.add_argument(
         "--verbose", "-v", 
@@ -137,7 +137,7 @@ def process_single_regex(analyzer: LexicalAnalyzer, args: argparse.Namespace) ->
             ascii_eps=args.ascii_eps
         )
         
-        print("✓ Processing completed successfully")
+        print("OK Processing completed successfully")
         print(f"  Postfix: {result.postfix}")
         print(f"  States: NFA={result.nfa_states}, DFA={result.dfa_states}, Min={result.dfa_min_states}")
         print(f"  Accepts '{args.word}': NFA={'Yes' if result.nfa_accepts else 'No'}, "
@@ -146,7 +146,7 @@ def process_single_regex(analyzer: LexicalAnalyzer, args: argparse.Namespace) ->
         print(f"  Files generated in: {args.outdir}")
         
     except RegexError as e:
-        print(f"✗ Error processing regular expression: {e}")
+        print(f"X Error processing regular expression: {e}")
         sys.exit(1)
 
 
@@ -166,7 +166,7 @@ def process_file_regexes(analyzer: LexicalAnalyzer, args: argparse.Namespace) ->
             ascii_eps=args.ascii_eps
         )
         
-        print(f"✓ Successfully processed {len(results)} regular expressions")
+        print(f"OK Successfully processed {len(results)} regular expressions")
         
         for i, result in enumerate(results, 1):
             print(f"[{i}] Postfix: {result.postfix}")
@@ -178,12 +178,13 @@ def process_file_regexes(analyzer: LexicalAnalyzer, args: argparse.Namespace) ->
         print(f"Files generated in: {args.outdir}")
         
     except RegexError as e:
-        print(f"✗ Error processing file: {e}")
+        print(f"X Error processing file: {e}")
         sys.exit(1)
 
 
 def main() -> None:
     """Main entry point for the CLI."""
+    args = None  # Initialize args variable
     try:
         # Parse and validate arguments
         args = parse_arguments()
@@ -210,7 +211,7 @@ def main() -> None:
         sys.exit(130)
     except Exception as e:
         print(f"X Unexpected error: {e}")
-        if args.verbose:
+        if args and hasattr(args, 'verbose') and args.verbose:
             import traceback
             traceback.print_exc()
         sys.exit(1)

@@ -76,8 +76,7 @@ lexical-analyzer --regex 'a*b*' --word 'aabb' --outdir resultados
 # Usar símbolo epsilon en ASCII (útil para algunos terminales)
 lexical-analyzer --regex 'a*' --word 'aaa' --ascii-eps --outdir resultados
 
-# NOTA: En Windows con Git Bash, las expresiones con paréntesis pueden causar problemas.
-# Para expresiones complejas como "(a|b)*abb", usar el archivo de entrada es más confiable.
+# NOTA: El proyecto está optimizado para Windows. Usa 'eps' como símbolo epsilon por defecto.
 ```
 
 ### Desde Python

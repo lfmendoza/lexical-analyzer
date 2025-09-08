@@ -21,7 +21,7 @@ def main():
     print("=" * 40)
     
     # Initialize analyzer
-    analyzer = LexicalAnalyzer(eps_symbol="ε")
+    analyzer = LexicalAnalyzer(eps_symbol="eps")
     
     # Example regular expressions and test words
     examples = [

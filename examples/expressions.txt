@@ -27,6 +27,6 @@ a*b*
 (a|b)*abb(a|b)*
 
 # Epsilon patterns
-ε
-a*ε
-ε*
+eps
+a*eps
+eps*

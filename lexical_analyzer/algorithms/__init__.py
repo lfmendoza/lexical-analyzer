@@ -14,7 +14,7 @@ from ..core import State, Fragment, DFA, RegexError
 
 
 # Constants
-EPS = "ε"
+EPS = "eps"
 OPERATORS = {"(", ")", "[", "]", "-", "^", "*", "+", "?", "|", "."}
 UNARY_OPERATORS = {"*", "+", "?"}
 BINARY_OPERATORS = {"|", "."}
