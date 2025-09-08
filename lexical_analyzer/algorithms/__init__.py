@@ -149,18 +149,22 @@ def insert_concat_ops(regex: str) -> str:
         # Add concatenation between:
         # - Symbol and symbol
         # - Symbol and opening parenthesis
+        # - Symbol and epsilon
         # - Closing parenthesis and symbol
         # - Closing parenthesis and opening parenthesis
+        # - Closing parenthesis and epsilon
         # - Unary operator and symbol
         # - Unary operator and opening parenthesis
+        # - Unary operator and epsilon
         # - Epsilon and symbol
         # - Epsilon and opening parenthesis
+        # - Epsilon and epsilon
         
         should_concat = (
-            (is_symbol(char) and (is_symbol(next_char) or next_char == "(")) or
-            (char == ")" and (is_symbol(next_char) or next_char == "(")) or
-            (char in UNARY_OPERATORS and (is_symbol(next_char) or next_char == "(")) or
-            (char == EPS and (is_symbol(next_char) or next_char == "("))
+            (is_symbol(char) and (is_symbol(next_char) or next_char == "(" or next_char == EPS)) or
+            (char == ")" and (is_symbol(next_char) or next_char == "(" or next_char == EPS)) or
+            (char in UNARY_OPERATORS and (is_symbol(next_char) or next_char == "(" or next_char == EPS)) or
+            (char == EPS and (is_symbol(next_char) or next_char == "(" or next_char == EPS))
         )
         
         if should_concat:

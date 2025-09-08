@@ -33,9 +33,9 @@ def parse_arguments() -> argparse.Namespace:
 Lexical Analyzer - Professional Regular Expression Processing
 
 Implements industry-standard algorithms for regular expression processing:
-• Shunting Yard algorithm for infix → postfix conversion
+• Shunting Yard algorithm for infix -> postfix conversion
 • Thompson's construction for NFA generation
-• Subset construction for NFA → DFA conversion
+• Subset construction for NFA -> DFA conversion
 • Hopcroft's algorithm for DFA minimization
 • Comprehensive simulation and SVG visualization
 
@@ -206,10 +206,10 @@ def main() -> None:
         logger.info("Lexical Analyzer completed successfully")
         
     except KeyboardInterrupt:
-        print("\n✗ Operation cancelled by user")
+        print("\nX Operation cancelled by user")
         sys.exit(130)
     except Exception as e:
-        print(f"✗ Unexpected error: {e}")
+        print(f"X Unexpected error: {e}")
         if args.verbose:
             import traceback
             traceback.print_exc()

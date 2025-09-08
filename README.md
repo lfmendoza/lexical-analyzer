@@ -25,9 +25,27 @@ Además, genera visualizaciones en SVG de todos los autómatas para que puedas v
 
 ## Instalación
 
-### Opción 1: Con Poetry (Recomendado)
+### Opción 1: Instalación Automática (Recomendado)
 
-Si tienes Poetry instalado:
+```bash
+# Ejecutar el script de instalación
+python install.py
+```
+
+### Opción 2: Instalación Manual con pip
+
+```bash
+# Instalar el paquete en modo desarrollo
+pip install -e .
+
+# Verificar la instalación
+python -c "import lexical_analyzer; print('✅ Instalación exitosa!')"
+
+# Probar el CLI
+lexical-analyzer --help
+```
+
+### Opción 3: Con Poetry (Si está instalado)
 
 ```bash
 # Instalar dependencias
@@ -37,15 +55,11 @@ poetry install
 poetry shell
 ```
 
-### Opción 2: Con pip
+### Opción 4: Sin Instalación (Para Pruebas Rápidas)
 
 ```bash
-# Crear entorno virtual
-python -m venv venv
-source venv/bin/activate  # En Windows: venv\Scripts\activate
-
-# Instalar el paquete
-pip install -e .
+# Ejecutar directamente desde el directorio del proyecto
+python examples/example.py
 ```
 
 ## Uso
@@ -93,9 +107,15 @@ lexical-analyzer/
 ├── core/                   # Estructuras de datos básicas
 ├── visualization/          # Generación de gráficos SVG
 ├── examples/               # Ejemplos de uso
-├── tests/                  # Pruebas unitarias e integración
+├── tests/                  # Suite de pruebas completa
+│   ├── unit/              # Pruebas unitarias
+│   └── integration/        # Pruebas de integración
+├── scripts/                # Scripts de utilidad
 ├── cli.py                  # Interfaz de línea de comandos
-└── __init__.py             # Módulo principal
+├── __init__.py             # Módulo principal
+├── install.py              # Script de instalación
+├── pyproject.toml          # Configuración del proyecto
+└── README.md               # Documentación principal
 ```
 
 ## Ejemplos Incluidos
@@ -127,13 +147,19 @@ poetry run pre-commit install
 
 ```bash
 # Todas las pruebas
-poetry run pytest
+python -m pytest tests/ -v
 
 # Solo pruebas unitarias
-poetry run pytest tests/unit/
+python -m pytest tests/unit/ -v
+
+# Solo pruebas de integración
+python -m pytest tests/integration/ -v
 
 # Con cobertura
-poetry run pytest --cov=lexical_analyzer --cov-report=html
+python -m pytest tests/ --cov=lexical_analyzer --cov-report=html
+
+# Verificación completa
+python tests/integration/verify_all.py
 ```
 
 ### Formatear código

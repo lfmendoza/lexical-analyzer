@@ -41,7 +41,7 @@ def draw_nfa_svg(fragment: Fragment, path: str, ascii_eps: bool = False) -> None
     # Calculate layout
     n_states = len(set().union(*[
         {fragment.start.id, fragment.accept.id},
-        *[set(trans.keys()) for trans in fragment.transitions.values()],
+        *[set(fragment.transitions.keys())],
         *[set(next_state for _, next_state in trans) 
           for trans in fragment.transitions.values()]
     ]))

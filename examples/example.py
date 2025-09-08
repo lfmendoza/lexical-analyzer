@@ -6,12 +6,18 @@ This script demonstrates how to use the LexicalAnalyzer class
 programmatically to process regular expressions.
 """
 
+import sys
+import os
+
+# Add the parent directory to the Python path to import lexical_analyzer
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 from lexical_analyzer import LexicalAnalyzer
 
 
 def main():
     """Main example function."""
-    print("🚀 Lexical Analyzer Example")
+    print("Lexical Analyzer Example")
     print("=" * 40)
     
     # Initialize analyzer

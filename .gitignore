@@ -165,11 +165,14 @@ cython_debug/
 # Project specific
 example_output*/
 test_output/
+temp_test/
+resultado*/
 *.svg
 *.txt
 !requirements*.txt
 !README.txt
 !examples/expressions.txt
+!tests/README.txt
 
 # OS specific
 .DS_Store
