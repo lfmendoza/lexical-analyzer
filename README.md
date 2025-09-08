@@ -1,5 +1,15 @@
 # Analizador Léxico - Procesamiento de Expresiones Regulares
 
+[![Python](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
+[![Poetry](https://img.shields.io/badge/poetry-dependency%20management-orange.svg)](https://python-poetry.org/)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+[![Tests](https://img.shields.io/badge/tests-passing-brightgreen.svg)](https://github.com/lfmendoza/lexical-analyzer/actions)
+[![Code Style](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![Última Actualización](https://img.shields.io/github/last-commit/lfmendoza/lexical-analyzer)](https://github.com/lfmendoza/lexical-analyzer/commits/main)
+[![Tamaño del Código](https://img.shields.io/github/languages/code-size/lfmendoza/lexical-analyzer)](https://github.com/lfmendoza/lexical-analyzer)
+
+> **Repositorio**: [https://github.com/lfmendoza/lexical-analyzer](https://github.com/lfmendoza/lexical-analyzer)
+
 Este proyecto implementa los algoritmos fundamentales para el procesamiento de expresiones regulares, desarrollado como parte del curso de Teoría de la Computación. El objetivo es construir autómatas finitos a partir de expresiones regulares y verificar si cadenas pertenecen al lenguaje que estas definen.
 
 ## ¿Qué hace este proyecto?
@@ -177,21 +187,43 @@ El proyecto incluye varios casos de prueba que cubren:
 - Python 3.8 o superior
 - Poetry (para gestión de dependencias)
 
+## Estado del Proyecto
+
+[![GitHub stars](https://img.shields.io/github/stars/lfmendoza/lexical-analyzer?style=social)](https://github.com/lfmendoza/lexical-analyzer)
+[![GitHub forks](https://img.shields.io/github/forks/lfmendoza/lexical-analyzer?style=social)](https://github.com/lfmendoza/lexical-analyzer/fork)
+[![GitHub issues](https://img.shields.io/github/issues/lfmendoza/lexical-analyzer)](https://github.com/lfmendoza/lexical-analyzer/issues)
+[![GitHub pull requests](https://img.shields.io/github/issues-pr/lfmendoza/lexical-analyzer)](https://github.com/lfmendoza/lexical-analyzer/pulls)
+
 ## Contribuir
 
-Si quieres contribuir al proyecto:
+¡Las contribuciones son bienvenidas! Si quieres contribuir al proyecto:
 
-1. Haz un fork del repositorio
-2. Crea una rama para tu feature (`git checkout -b feature/nueva-funcionalidad`)
-3. Haz commit de tus cambios (`git commit -am 'Agregar nueva funcionalidad'`)
-4. Push a la rama (`git push origin feature/nueva-funcionalidad`)
-5. Crea un Pull Request
+1. **Fork** el repositorio: [https://github.com/lfmendoza/lexical-analyzer](https://github.com/lfmendoza/lexical-analyzer)
+2. **Clona** tu fork localmente: `git clone https://github.com/tu-usuario/lexical-analyzer.git`
+3. **Crea** una rama para tu feature: `git checkout -b feature/nueva-funcionalidad`
+4. **Haz commit** de tus cambios: `git commit -am 'Agregar nueva funcionalidad'`
+5. **Push** a tu rama: `git push origin feature/nueva-funcionalidad`
+6. **Abre** un Pull Request en [GitHub](https://github.com/lfmendoza/lexical-analyzer/pulls)
+
+### Guías de Contribución
+
+- Asegúrate de que todos los tests pasen: `poetry run pytest`
+- Sigue el estilo de código: `poetry run black . && poetry run isort .`
+- Agrega tests para nuevas funcionalidades
+- Actualiza la documentación si es necesario
 
 ## Licencia
 
 Este proyecto está bajo la Licencia MIT. Ver el archivo LICENSE para más detalles.
 
-## Referencias
+## Enlaces Útiles
+
+- **Repositorio**: [https://github.com/lfmendoza/lexical-analyzer](https://github.com/lfmendoza/lexical-analyzer)
+- **Issues**: [Reportar problemas](https://github.com/lfmendoza/lexical-analyzer/issues)
+- **Discusiones**: [GitHub Discussions](https://github.com/lfmendoza/lexical-analyzer/discussions)
+- **Wiki**: [Documentación adicional](https://github.com/lfmendoza/lexical-analyzer/wiki)
+
+## Referencias Académicas
 
 - Thompson, K. (1968). "Programming techniques: Regular expression search algorithm"
 - Hopcroft, J. E. (1971). "An n log n algorithm for minimizing states in a finite automaton"
