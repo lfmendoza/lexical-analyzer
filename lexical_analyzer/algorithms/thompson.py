@@ -190,10 +190,50 @@ class ThompsonNFA:
         
         stack: List[Fragment] = []
         
-        for char in postfix_regex:
-            if char == "ε" or (char not in {"*", "+", "?", "|", "."} and char.isprintable()):
+        i = 0
+        while i < len(postfix_regex):
+            char = postfix_regex[i]
+            
+            # Handle escape sequences
+            if char == '\\' and i + 1 < len(postfix_regex):
+                # It's an escape sequence - treat the next character as literal
+                next_char = postfix_regex[i + 1]
+                stack.append(self.symbol(next_char))
+                i += 2
+            # Handle character classes [abc]
+            elif char == '[':
+                # Find the closing bracket
+                j = i + 1
+                while j < len(postfix_regex) and postfix_regex[j] != ']':
+                    j += 1
+                if j < len(postfix_regex):
+                    # Extract characters inside brackets
+                    chars_inside = postfix_regex[i+1:j]
+                    # Create union of all characters in the class
+                    if chars_inside:
+                        char_fragments = [self.symbol(c) for c in chars_inside]
+                        if len(char_fragments) == 1:
+                            stack.append(char_fragments[0])
+                        else:
+                            # Create union of all characters
+                            union_frag = char_fragments[0]
+                            for frag in char_fragments[1:]:
+                                union_frag = self.union(union_frag, frag)
+                            stack.append(union_frag)
+                    i = j + 1
+                else:
+                    # No closing bracket found, treat as normal character
+                    stack.append(self.symbol(char))
+                    i += 1
+            # Handle multi-character symbols (like 'eps')
+            elif char == 'e' and i + 2 < len(postfix_regex) and postfix_regex[i:i+3] == 'eps':
+                # It's the 'eps' symbol - treat as epsilon
+                stack.append(self.epsilon())
+                i += 3
+            elif char == "ε" or (char not in {"*", "+", "?", "|", "."} and char.isprintable()):
                 # Symbol or epsilon
                 stack.append(self.symbol(char))
+                i += 1
             elif char == ".":
                 # Concatenation
                 if len(stack) < 2:
@@ -201,6 +241,7 @@ class ThompsonNFA:
                 frag2 = stack.pop()
                 frag1 = stack.pop()
                 stack.append(self.concat(frag1, frag2))
+                i += 1
             elif char == "|":
                 # Union
                 if len(stack) < 2:
@@ -208,24 +249,28 @@ class ThompsonNFA:
                 frag2 = stack.pop()
                 frag1 = stack.pop()
                 stack.append(self.union(frag1, frag2))
+                i += 1
             elif char == "*":
                 # Kleene star
                 if not stack:
                     raise RegexError("Insufficient operands for star")
                 frag = stack.pop()
                 stack.append(self.star(frag))
+                i += 1
             elif char == "+":
                 # Plus
                 if not stack:
                     raise RegexError("Insufficient operands for plus")
                 frag = stack.pop()
                 stack.append(self.plus(frag))
+                i += 1
             elif char == "?":
                 # Optional
                 if not stack:
                     raise RegexError("Insufficient operands for optional")
                 frag = stack.pop()
                 stack.append(self.optional(frag))
+                i += 1
             else:
                 raise RegexError(f"Invalid character in postfix expression: {repr(char)}")
         

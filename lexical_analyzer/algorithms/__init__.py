@@ -135,16 +135,55 @@ def insert_concat_ops(regex: str) -> str:
     if not regex:
         return regex
     
+    # First, tokenize the regex to handle escape sequences and multi-character symbols
+    tokens = []
+    i = 0
+    
+    while i < len(regex):
+        char = regex[i]
+        
+        # Handle escape sequences
+        if char == '\\' and i + 1 < len(regex):
+            # It's an escape sequence - treat the next character as literal
+            next_char = regex[i + 1]
+            tokens.append(f'\\{next_char}')
+            i += 2
+        # Handle character classes [abc]
+        elif char == '[':
+            # Find the closing bracket
+            j = i + 1
+            while j < len(regex) and regex[j] != ']':
+                j += 1
+            if j < len(regex):
+                # Extract characters inside brackets
+                chars_inside = regex[i+1:j]
+                tokens.append(f'[{chars_inside}]')
+                i = j + 1
+            else:
+                # No closing bracket found, treat as normal character
+                tokens.append(char)
+                i += 1
+        # Handle multi-character symbols (like 'eps')
+        elif char == 'e' and i + 2 < len(regex) and regex[i:i+3] == 'eps':
+            # It's the 'eps' symbol - treat as single symbol
+            tokens.append('eps')
+            i += 3
+        else:
+            # Normal character
+            tokens.append(char)
+            i += 1
+    
+    # Now insert concatenation between tokens
     result = []
     
-    for i, char in enumerate(regex):
-        result.append(char)
+    for i, token in enumerate(tokens):
+        result.append(token)
         
-        # Don't add concatenation after the last character
-        if i == len(regex) - 1:
+        # Don't add concatenation after the last token
+        if i == len(tokens) - 1:
             continue
         
-        next_char = regex[i + 1]
+        next_token = tokens[i + 1]
         
         # Add concatenation between:
         # - Symbol and symbol
@@ -160,11 +199,50 @@ def insert_concat_ops(regex: str) -> str:
         # - Epsilon and opening parenthesis
         # - Epsilon and epsilon
         
+        # Check if token is an escaped character or character class
+        is_token_escaped = token.startswith('\\')
+        is_token_char_class = token.startswith('[') and token.endswith(']')
+        is_next_token_escaped = next_token.startswith('\\')
+        is_next_token_char_class = next_token.startswith('[') and next_token.endswith(']')
+        
+        # Extract the actual character for escaped tokens
+        token_char = token[1:] if is_token_escaped else token
+        next_token_char = next_token[1:] if is_next_token_escaped else next_token
+        
         should_concat = (
-            (is_symbol(char) and (is_symbol(next_char) or next_char == "(" or next_char == EPS)) or
-            (char == ")" and (is_symbol(next_char) or next_char == "(" or next_char == EPS)) or
-            (char in UNARY_OPERATORS and (is_symbol(next_char) or next_char == "(" or next_char == EPS)) or
-            (char == EPS and (is_symbol(next_char) or next_char == "(" or next_char == EPS))
+            # Symbol and symbol (including escaped characters and character classes)
+            ((token_char not in OPERATORS and token_char != EPS and not is_token_escaped and not is_token_char_class) and 
+             (next_token_char not in OPERATORS and next_token_char != EPS and not is_next_token_escaped and not is_next_token_char_class)) or
+            # Escaped character and symbol/character class
+            (is_token_escaped and (next_token_char not in OPERATORS and next_token_char != EPS and not is_next_token_escaped and not is_next_token_char_class)) or
+            # Symbol and escaped character/character class
+            ((token_char not in OPERATORS and token_char != EPS and not is_token_escaped and not is_token_char_class) and (is_next_token_escaped or is_next_token_char_class)) or
+            # Escaped character and escaped character/character class
+            (is_token_escaped and (is_next_token_escaped or is_next_token_char_class)) or
+            # Character class and symbol/escaped/character class
+            (is_token_char_class and ((next_token_char not in OPERATORS and next_token_char != EPS and not is_next_token_escaped and not is_next_token_char_class) or is_next_token_escaped or is_next_token_char_class)) or
+            # Symbol/escaped/character class and opening parenthesis
+            (((token_char not in OPERATORS and token_char != EPS and not is_token_escaped and not is_token_char_class) or is_token_escaped or is_token_char_class) and next_token == "(") or
+            # Symbol/escaped/character class and epsilon
+            (((token_char not in OPERATORS and token_char != EPS and not is_token_escaped and not is_token_char_class) or is_token_escaped or is_token_char_class) and next_token == EPS) or
+            # Closing parenthesis and symbol/escaped/character class
+            (token == ")" and ((next_token_char not in OPERATORS and next_token_char != EPS and not is_next_token_escaped and not is_next_token_char_class) or is_next_token_escaped or is_next_token_char_class)) or
+            # Closing parenthesis and opening parenthesis
+            (token == ")" and next_token == "(") or
+            # Closing parenthesis and epsilon
+            (token == ")" and next_token == EPS) or
+            # Unary operator and symbol/escaped/character class
+            (token in UNARY_OPERATORS and ((next_token_char not in OPERATORS and next_token_char != EPS and not is_next_token_escaped and not is_next_token_char_class) or is_next_token_escaped or is_next_token_char_class)) or
+            # Unary operator and opening parenthesis
+            (token in UNARY_OPERATORS and next_token == "(") or
+            # Unary operator and epsilon
+            (token in UNARY_OPERATORS and next_token == EPS) or
+            # Epsilon and symbol/escaped/character class
+            (token == EPS and ((next_token_char not in OPERATORS and next_token_char != EPS and not is_next_token_escaped and not is_next_token_char_class) or is_next_token_escaped or is_next_token_char_class)) or
+            # Epsilon and opening parenthesis
+            (token == EPS and next_token == "(") or
+            # Epsilon and epsilon
+            (token == EPS and next_token == EPS)
         )
         
         if should_concat:
@@ -189,13 +267,56 @@ def to_postfix(regex: str) -> str:
     if not regex:
         raise RegexError("Empty regular expression")
     
+    # First, tokenize the regex to handle escape sequences, character classes, and multi-character symbols
+    tokens = []
+    i = 0
+    
+    while i < len(regex):
+        char = regex[i]
+        
+        # Handle escape sequences
+        if char == '\\' and i + 1 < len(regex):
+            # It's an escape sequence - treat the next character as literal
+            next_char = regex[i + 1]
+            tokens.append(f'\\{next_char}')
+            i += 2
+        # Handle character classes [abc]
+        elif char == '[':
+            # Find the closing bracket
+            j = i + 1
+            while j < len(regex) and regex[j] != ']':
+                j += 1
+            if j < len(regex):
+                # Extract characters inside brackets
+                chars_inside = regex[i+1:j]
+                tokens.append(f'[{chars_inside}]')
+                i = j + 1
+            else:
+                # No closing bracket found, treat as normal character
+                tokens.append(char)
+                i += 1
+        # Handle multi-character symbols (like 'eps')
+        elif char == 'e' and i + 2 < len(regex) and regex[i:i+3] == 'eps':
+            # It's the 'eps' symbol - treat as single symbol
+            tokens.append('eps')
+            i += 3
+        else:
+            # Normal character
+            tokens.append(char)
+            i += 1
+    
+    # Now apply Shunting Yard algorithm to tokens
     output: List[str] = []
     operator_stack: List[str] = []
     
-    for i, char in enumerate(regex):
-        if char == "(":
-            operator_stack.append(char)
-        elif char == ")":
+    for i, token in enumerate(tokens):
+        # Check if token is an escaped character or character class
+        is_token_escaped = token.startswith('\\')
+        is_token_char_class = token.startswith('[') and token.endswith(']')
+        
+        if token == "(":
+            operator_stack.append(token)
+        elif token == ")":
             # Pop operators until we find the matching opening parenthesis
             while operator_stack and operator_stack[-1] != "(":
                 output.append(operator_stack.pop())
@@ -204,7 +325,7 @@ def to_postfix(regex: str) -> str:
                 raise RegexError(f"Unbalanced parentheses at position {i}")
             
             operator_stack.pop()  # Remove the opening parenthesis
-        elif char in OPERATORS:
+        elif token in OPERATORS:
             # Handle operator precedence and associativity
             while (operator_stack and 
                    operator_stack[-1] != "(" and
@@ -212,20 +333,24 @@ def to_postfix(regex: str) -> str:
                 
                 top_op = operator_stack[-1]
                 top_prec = PRECEDENCE[top_op]
-                curr_prec = PRECEDENCE[char]
+                curr_prec = PRECEDENCE[token]
                 
                 # Check precedence and associativity
                 if (top_prec > curr_prec or 
-                    (top_prec == curr_prec and ASSOCIATIVITY[char] == "left")):
+                    (top_prec == curr_prec and ASSOCIATIVITY[token] == "left")):
                     output.append(operator_stack.pop())
                 else:
                     break
             
-            operator_stack.append(char)
-        elif is_symbol(char) or char == EPS:
-            output.append(char)
+            operator_stack.append(token)
+        elif is_token_escaped or is_token_char_class or token == EPS:
+            # Escaped character, character class, or epsilon
+            output.append(token)
+        elif is_symbol(token):
+            # Regular symbol
+            output.append(token)
         else:
-            raise RegexError(f"Unrecognized symbol at position {i}: {repr(char)}")
+            raise RegexError(f"Unrecognized token at position {i}: {repr(token)}")
     
     # Empty the operator stack
     while operator_stack:
